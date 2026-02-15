@@ -1,20 +1,29 @@
-from typing import List, Optional, Any
+﻿from __future__ import annotations
+
+from typing import Any
+
 from pydantic import Field, model_validator
+
 from .base import ITDBaseModel
 from .notification import Notification
 
+
 class Notifications(ITDBaseModel):
-    notifications: List[Notification] = Field(default_factory=list)
+    notifications: list[Notification] = Field(default_factory=list)
     has_more: bool = Field(False, alias="hasMore")
-    
-    @model_validator(mode='before')
+
+    @model_validator(mode="before")
     @classmethod
     def parse_structure(cls, data: Any) -> Any:
+        if isinstance(data, dict) and "data" in data and isinstance(data["data"], dict):
+            data = data["data"]
+
         if isinstance(data, dict):
             return {
                 "notifications": data.get("notifications", []),
-                "hasMore": data.get("hasMore", False)
+                "hasMore": data.get("hasMore", False),
             }
+
         return {"notifications": [], "hasMore": False}
 
     def __iter__(self):
@@ -26,5 +35,5 @@ class Notifications(ITDBaseModel):
     def __len__(self):
         return len(self.notifications)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Notifications count={len(self)}>"

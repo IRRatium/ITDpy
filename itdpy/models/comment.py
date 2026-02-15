@@ -1,19 +1,22 @@
-from typing import List, Optional
-from pydantic import Field
+﻿from __future__ import annotations
+
+from pydantic import AliasChoices, Field
+
+from .attachment import Attachment
 from .base import ITDBaseModel
 from .user_lite import UserLite
-from .attachment import Attachment
+
 
 class Comment(ITDBaseModel):
     id: str
-    content: Optional[str] = None
-    
-    likes_count: int = Field(0, alias="likesCount", validation_alias="likkesCount")
+    content: str | None = None
+
+    likes_count: int = Field(0, alias="likesCount", validation_alias=AliasChoices("likesCount", "likkesCount"))
     replies_count: int = Field(0, alias="repliesCount")
     is_liked: bool = Field(False, alias="isLiked")
-    
+
     created_at: str = Field(..., alias="createdAt")
-    
-    author: Optional[UserLite] = None
-    attachments: List[Attachment] = []
-    replies: List["Comment"] = []
+
+    author: UserLite | None = None
+    attachments: list[Attachment] = Field(default_factory=list)
+    replies: list[Comment] = Field(default_factory=list)

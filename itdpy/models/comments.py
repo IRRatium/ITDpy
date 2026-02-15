@@ -1,16 +1,54 @@
-from typing import List, Optional
-from pydantic import BaseModel, Field
+﻿from __future__ import annotations
+
+from typing import Any
+
+from pydantic import Field, model_validator
+
 from .base import ITDBaseModel
 from .comment import Comment
 
+
+from typing import Any
+from pydantic import Field, model_validator
+from .base import ITDBaseModel
+from .comment import Comment
+from .pagination import Pagination
+
+
 class CommentsData(ITDBaseModel):
-    comments: List[Comment]
-    total: int
-    has_more: bool = Field(..., alias="hasMore")
-    next_cursor: Optional[str] = Field(None, alias="nextCursor")
+    comments: list[Comment] = Field(default_factory=list)
+    pagination: Pagination | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_structure(cls, payload: Any) -> Any:
+        if not isinstance(payload, dict):
+            return {"comments": []}
+
+        if "replies" in payload:
+            return {
+                "comments": payload.get("replies", []),
+                "pagination": payload.get("pagination"),
+            }
+
+
+        if "comments" in payload:
+            return payload
+
+        return {"comments": []}
+
 
 class Comments(ITDBaseModel):
     data: CommentsData
+
+    @model_validator(mode="before")
+    @classmethod
+    def parse_structure(cls, payload: Any) -> Any:
+        if isinstance(payload, dict) and "data" in payload:
+            return payload
+        if isinstance(payload, dict):
+            return {"data": payload}
+        return {"data": {"comments": []}}
 
     def __iter__(self):
         return iter(self.data.comments)
@@ -20,3 +58,4 @@ class Comments(ITDBaseModel):
 
     def __len__(self):
         return len(self.data.comments)
+

@@ -1,49 +1,73 @@
-# posts
-from .posts import (
+﻿from .posts import (
+    create_post,
+    delete_post,
     get_post,
     get_posts,
-    create_post,
-    update_post,
-    delete_post,
-    like_post,
-    unlike_post,
-    repost_post,
     get_user_posts,
+    like_post,
+    repost_post,
+    unlike_post,
+    update_post,
 )
-
-# comments
 from .comments import (
     create_comment,
-    reply_to_comment,
-    like_comment,
-    unlike_comment,
     delete_comment,
     get_comments,
+    like_comment,
+    reply_to_comment,
+    unlike_comment,
+    get_replies,
 )
-
-# users
 from .users import (
-    get_me,
-    get_user,
+    follow_user,
     get_followers,
     get_following,
-    follow_user,
+    get_me,
+    get_user,
     unfollow_user,
 )
-
-# notifications
 from .notifications import (
     get_notifications,
-    mark_notification_read,
     mark_all_notification_read,
+    mark_notification_read,
 )
-
-# clans
 from .clans import get_top_clans
-
-# files
 from .files import upload_file
-
-# profile
 from .profile import update_profile
+from .pin import set_pin, get_pins, remove_pin 
+from .vote import vote
 
+__all__ = [
+    "create_post",
+    "delete_post",
+    "get_post",
+    "get_posts",
+    "get_user_posts",
+    "like_post",
+    "repost_post",
+    "unlike_post",
+    "update_post",
+    "create_comment",
+    "delete_comment",
+    "get_comments",
+    "like_comment",
+    "reply_to_comment",
+    "unlike_comment",
+    "follow_user",
+    "get_followers",
+    "get_following",
+    "get_me",
+    "get_user",
+    "unfollow_user",
+    "get_notifications",
+    "mark_all_notification_read",
+    "mark_notification_read",
+    "get_top_clans",
+    "upload_file",
+    "update_profile",
+    "get_replies",
+    "set_pin",
+    "get_pins", 
+    "remove_pin",
+    "vote"
+]

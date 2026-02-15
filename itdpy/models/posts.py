@@ -1,35 +1,39 @@
-from typing import List, Optional, Union, Any
+﻿from __future__ import annotations
+
+from typing import Any
+
 from pydantic import Field, model_validator
+
 from .base import ITDBaseModel
 from .post import Post
 
+
 class Posts(ITDBaseModel):
-    posts: List[Post] = Field(default_factory=list)
-    limit: Optional[int] = None
-    next_cursor: Optional[str] = Field(None, alias="nextCursor")
-    has_more: Optional[bool] = Field(None, alias="hasMore")
-    
-    @model_validator(mode='before')
+    posts: list[Post] = Field(default_factory=list)
+    limit: int | None = None
+    next_cursor: str | None = Field(None, alias="nextCursor")
+    has_more: bool | None = Field(None, alias="hasMore")
+
+    @model_validator(mode="before")
     @classmethod
     def parse_structure(cls, data: Any) -> Any:
         if isinstance(data, dict) and "data" in data:
             data = data["data"]
-            
+
         if isinstance(data, list):
             return {"posts": data}
-            
-        if isinstance(data, dict):
 
-            posts_list = data.get("posts", [])
+        if isinstance(data, dict):
+            posts_list = data.get("posts") or data.get("items") or []
             pagination = data.get("pagination", {})
-            
+
             return {
                 "posts": posts_list,
                 "limit": pagination.get("limit"),
                 "nextCursor": pagination.get("nextCursor"),
-                "hasMore": pagination.get("hasMore")
+                "hasMore": pagination.get("hasMore"),
             }
-            
+
         return {"posts": []}
 
     def __iter__(self):
@@ -41,5 +45,5 @@ class Posts(ITDBaseModel):
     def __len__(self):
         return len(self.posts)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Posts count={len(self)}>"

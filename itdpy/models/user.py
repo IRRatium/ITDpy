@@ -6,11 +6,12 @@ class User(UserLite):
     banner: Optional[str] = None
     bio: Optional[str] = None
     pinned_post_id: Optional[str] = Field(None, alias="pinnedPostId")
-    wall_closed: bool = Field(False, alias="wallClosed")
-    
+    wall_access: Optional[str] = Field(None, alias="wallAccess")
+    likes_visibility: Optional[str] = Field(None, alias="likesVisibility")
     followers_count: int = Field(0, alias="followersCount")
     following_count: int = Field(0, alias="followingCount")
     posts_count: int = Field(0, alias="postsCount")
-    
     is_followed_by: bool = Field(False, alias="isFollowedBy")
     created_at: Optional[str] = Field(None, alias="createdAt")
+    online: bool = False
+    last_seen: Optional[str] = Field(None, alias="lastSeen")

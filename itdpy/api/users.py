@@ -1,33 +1,42 @@
-from ..models import User, Me, Users
+﻿from __future__ import annotations
 
-def get_me(client):
-    r = client.get("/api/users/me")
-    return Me.model_validate(r.json())
+from ..models import Me, User, Users
+from ._common import build_query
 
-def get_user(client, username):
-    r = client.get(f"/api/users/{username}")
-    return User.model_validate(r.json())
 
-def follow_user(client, username: str):
-    r = client.post(f"/api/users/{username}/follow")
-    r.raise_for_status()
+def get_me(client) -> Me:
+    response = client.get("/api/users/me")
+    response.raise_for_status()
+    return Me.model_validate(response.json())
+
+
+def get_user(client, username: str) -> User:
+    response = client.get(f"/api/users/{username}")
+    response.raise_for_status()
+    return User.model_validate(response.json())
+
+
+def follow_user(client, username: str) -> bool:
+    response = client.post(f"/api/users/{username}/follow")
+    response.raise_for_status()
     return True
 
-def unfollow_user(client, username: str):
-    r = client.delete(f"/api/users/{username}/follow")
-    r.raise_for_status()
+
+def unfollow_user(client, username: str) -> bool:
+    response = client.delete(f"/api/users/{username}/follow")
+    response.raise_for_status()
     return True
 
-def get_followers(client, username: str, page: int = 1, limit: int = 30):
-    r = client.get(
-        f"/api/users/{username}/followers?page={page}&limit={limit}"
-    )
-    r.raise_for_status()
-    return Users.model_validate(r.json())
 
-def get_following(client, username: str, page: int = 1, limit: int = 30):
-    r = client.get(
-        f"/api/users/{username}/following?page={page}&limit={limit}"
-    )
-    r.raise_for_status()
-    return Users.model_validate(r.json())
+def get_followers(client, username: str, page: int = 1, limit: int = 30) -> Users:
+    query = build_query({"page": page, "limit": limit})
+    response = client.get(f"/api/users/{username}/followers?{query}")
+    response.raise_for_status()
+    return Users.model_validate(response.json())
+
+
+def get_following(client, username: str, page: int = 1, limit: int = 30) -> Users:
+    query = build_query({"page": page, "limit": limit})
+    response = client.get(f"/api/users/{username}/following?{query}")
+    response.raise_for_status()
+    return Users.model_validate(response.json())

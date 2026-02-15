@@ -1,83 +1,129 @@
-from ..models import Posts, Post
+﻿from __future__ import annotations
 
-def get_posts(client, limit: int = 20, tab: str = "popular"):
-    r = client.get(f"/api/posts?limit={limit}&tab={tab}")
-    r.raise_for_status()
+from ..models import Post, Posts, Poll, PostUpdate
+from ._common import build_query, normalize_id_list, truthy_response_status
+from ..formatting import format_html
 
-    return Posts.model_validate(r.json())
+def get_posts(client, limit: int = 20, tab: str = "popular") -> Posts:
+    allowed_tabs = {"popular", "newest", "oldest"}
 
-def get_post(client, post_id: str):
-    r = client.get(f"/api/posts/{post_id}")
-    return Post.model_validate(r.json())
+    if tab not in allowed_tabs:
+        raise ValueError(
+            f"Invalid sort value '{tab}'. "
+            f"Allowed values: {', '.join(allowed_tabs)}"
+        )
+    
+    query = build_query({"limit": limit, "tab": tab})
+    response = client.get(f"/api/posts?{query}")
+    response.raise_for_status()
+    return Posts.model_validate(response.json())
 
-def create_post(client,content: str = "",attachment_ids: list[str] | str | None = None,wall_recipient_id: str | None = None):
 
-    if attachment_ids is None:
-        attachment_ids = []
-    elif isinstance(attachment_ids, str):
-        attachment_ids = [attachment_ids]
+def get_post(client, post_id: str) -> Post:
+    response = client.get(f"/api/posts/{post_id}")
+    response.raise_for_status()
+    return Post.model_validate(response.json())
 
-    payload = {
+
+def create_post(
+    client,
+    content: str = "",
+    attachment_ids: list[str] | str | None = None,
+    wall_recipient_id: str | None = None,
+    poll: dict | Poll | None = None,
+    parse_html: bool = False,
+) -> Post:
+
+    if parse_html:
+        formatted = format_html(content)
+        content = formatted["content"]
+        spans = formatted["spans"]
+    else:
+        spans = None
+
+    payload: dict[str, object] = {
         "content": content,
-        "attachmentIds": attachment_ids
+        "attachmentIds": normalize_id_list(attachment_ids),
     }
+
+    if spans:
+        payload["spans"] = spans
 
     if wall_recipient_id is not None:
         payload["wallRecipientId"] = wall_recipient_id
 
-    r = client.post(
-        "/api/posts",
-        json=payload
-    )
+    if poll:
+        if isinstance(poll, dict):
+            poll = Poll.from_simple(
+                question=poll["question"],
+                options=poll["options"],
+                multiple_choice=poll.get("multiple_choice", False),
+            )
 
-    r.raise_for_status()
-    return Post.model_validate(r.json())
+        payload["poll"] = poll.model_dump(by_alias=True)
 
-def update_post(client, post_id: str, content: str):
-    payload = {
-        "content": content
-    }
+    response = client.post("/api/posts", json=payload)
+    response.raise_for_status()
+    return Post.model_validate(response.json())
 
-    r = client.put(
-        f"/api/posts/{post_id}",
-        json=payload
-    )
 
-    r.raise_for_status()
-    return r.json()
+def update_post(client, post_id: str, content: str, parse_html: bool = False) -> dict:
+    
+    if parse_html:
+        formatted = format_html(content)
+        payload: dict[str, object] = {
+            "content": formatted["content"],
+            "spans": formatted["spans"]
+        }
+    else:
+        payload: dict[str, object] = {
+            "content": content
+        }
+    response = client.put(f"/api/posts/{post_id}", json=payload)
+    response.raise_for_status()
+    return PostUpdate.model_validate(response.json())
+
 
 def delete_post(client, post_id: str) -> bool:
-    r = client.delete(f"/api/posts/{post_id}")
-
-    if r.status_code == 204:
+    response = client.delete(f"/api/posts/{post_id}")
+    if response.status_code == 204:
         return True
-
-    r.raise_for_status()
+    response.raise_for_status()
     return False
 
-def like_post(client, post_id: str):
-    r = client.post(f"/api/posts/{post_id}/like")
-    r.raise_for_status()
-    if r.status_code == 200:
-        return True
-    return False
 
-def unlike_post(client, post_id: str):
-    r = client.delete(f"/api/posts/{post_id}/like")
-    r.raise_for_status()
-    if r.status_code == 200:
-        return True
-    return False
+def like_post(client, post_id: str) -> bool:
+    response = client.post(f"/api/posts/{post_id}/like")
+    response.raise_for_status()
+    return truthy_response_status(response.status_code)
 
-def repost_post(client, post_id: str):
-    r = client.post(f"/api/posts/{post_id}/repost")
-    r.raise_for_status()
-    return True
 
-def get_user_posts(client, username: str, limit: int = 20, sort: str = "new"):# new | popular
-    r = client.get(
-        f"/api/posts/user/{username}?limit={limit}&sort={sort}"
-    )
-    r.raise_for_status()
+def unlike_post(client, post_id: str) -> bool:
+    response = client.delete(f"/api/posts/{post_id}/like")
+    response.raise_for_status()
+    return truthy_response_status(response.status_code)
 
-    return Posts.model_validate(r.json())
+
+def repost_post(client, post_id: str, content: str | None = None) -> bool:
+    payload = {"content": content} if content is not None else None
+    response = client.post(f"/api/posts/{post_id}/repost", json=payload)
+
+    body = None
+    try:
+        body = response.json()
+    except Exception:
+        body = None
+
+    response.raise_for_status()
+
+    if isinstance(body, dict) and body.get("id"):
+        return body
+
+    return truthy_response_status(response.status_code)
+
+
+def get_user_posts(client, username: str, limit: int = 20, sort: str = "new") -> Posts:
+    query = build_query({"limit": limit, "sort": sort})
+    response = client.get(f"/api/posts/user/{username}?{query}")
+    response.raise_for_status()
+    return Posts.model_validate(response.json())
