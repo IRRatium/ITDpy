@@ -1,31 +1,30 @@
-from typing import List, Optional, Any
+from __future__ import annotations
+
+from typing import Any
 from pydantic import Field, model_validator
+
 from .base import ITDBaseModel
 from .user_lite import UserLite
+from .pagination import Pagination
+
 
 class Users(ITDBaseModel):
-    users: List[UserLite] = Field(default_factory=list)
-    page: Optional[int] = None
-    limit: Optional[int] = None
-    total: Optional[int] = None
-    has_more: Optional[bool] = Field(None, alias="hasMore")
-    
-    @model_validator(mode='before')
+    users: list[UserLite] = Field(default_factory=list)
+    pagination: Pagination | None = None
+
+    @model_validator(mode="before")
     @classmethod
     def parse_structure(cls, data: Any) -> Any:
-        if isinstance(data, dict):
-            root_data = data.get("data", {})
-            users_list = root_data.get("users", [])
-            pagination = root_data.get("pagination", {})
-            
-            return {
-                "users": users_list,
-                "page": pagination.get("page"),
-                "limit": pagination.get("limit"),
-                "total": pagination.get("total"),
-                "hasMore": pagination.get("hasMore")
-            }
-        return {"users": []}
+        if not isinstance(data, dict):
+            return {"users": []}
+
+        if "data" in data:
+            data = data["data"]
+
+        return {
+            "users": data.get("users", []),
+            "pagination": data.get("pagination"),
+        }
 
     def __getitem__(self, index):
         return self.users[index]
