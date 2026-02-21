@@ -39,7 +39,7 @@ client.get_user("gam5510")
 
 -   `username` — username пользователя
 
-Возвращает модель `User`  [подробнее](models/user)
+Возвращает модель `User`  [подробнее](models/users)
 
 ### Пример:
 ```python
@@ -95,7 +95,7 @@ client.get_followers("gam5510", page=1, limit=30)
 -   `limit` — количество пользователей на странице
     
 
-Возвращает модель `Users`  [подробнее](models/user)
+Возвращает модель `Users`  [подробнее](models/users)
 
 ### Пример:
 ```python
@@ -116,7 +116,7 @@ client.get_following("gam5510", page=1, limit=30)
 -   `page` — номер страницы
 -   `limit` — количество пользователей на странице
    
-Возвращает модель `Users`  [подробнее](models/user)
+Возвращает модель `Users`  [подробнее](models/users)
 
 ### Пример:
 ```python
