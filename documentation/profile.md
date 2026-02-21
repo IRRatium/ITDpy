@@ -27,7 +27,7 @@ client.update_profile(
 
 ### Возвращает
 
-Модель `Me` [подробнее](models/user)
+Модель `Me` [подробнее](models/users)
 
 ----------
 

@@ -22,34 +22,42 @@ pip install -e .
 
 - [Документация](documentation/index.md)  
 - [Быстрый старт](documentation/quickstart.md)  
-
+- [Навигация](documentation/NAVIGATION.md)
 ---  
   
 ## Модули  
   
-- [Users](documentation/users.md)  
-- [Profile](documentation/profile.md)  
-- [Posts](documentation/posts.md)  
-- [Comments](documentation/comments.md)  
-- [Polls](documentation/polls.md)  
-- [Pins](documentation/pins.md)  
-- [Settings](documentation/settings.md)  
+- [Clans](documentation/clans.md)
+- [Comments](documentation/comments.md)
 - [Discovery](documentation/discovery.md)  
-- [Notifications](documentation/notifications.md)  
-- [Upload](documentation/upload.md)  
 - [Formatting](documentation/formatting.md)  
+- [Notifications](documentation/notifications.md)
+- [Pins](documentation/pins.md) 
+- [Polls](documentation/polls.md)  
+- [Posts](documentation/posts.md) 
+- [Profile](documentation/profile.md) 
+- [Settings](documentation/settings.md)
+- [Upload](documentation/upload.md)
+- [Users](documentation/users.md)   
+  
   
 ---  
   
 ## Модели  
-  
-- [Users](documentation/models/users.md)  
-- [Post](documentation/models/post.md)  
+
+- [Actor](documentation/models/actor.md)
 - [Comment](documentation/models/comment.md)  
-- [Poll](documentation/models/poll.md)  
-- [Pin](documentation/models/pins.md)  
-- [Pagination](documentation/models/pagination.md)  
+- [Comments](documentation/models/comments.md)
+- [Discovery](documentation/models/discovery.md)
 - [Notification](documentation/models/notification.md)
+- [Notifications](documentation/models/notifications.md)
+- [Pagination](documentation/models/pagination.md)  
+- [Pins](documentation/models/pins.md) 
+- [Poll](documentation/models/poll.md)  
+- [Post](documentation/models/post.md)  
+- [Posts](documentation/models/posts.md)  
+- [Settings](documentation/models/settings.md)
+- [Users](documentation/models/users.md)  
 
 
 ## Быстрый старт
