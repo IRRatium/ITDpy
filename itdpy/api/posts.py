@@ -4,7 +4,7 @@ from ..models import Post, Posts, Poll, PostUpdate
 from ._common import build_query, normalize_id_list, truthy_response_status
 from ..formatting import format_html
 
-def get_posts(client, limit: int = 20, tab: str = "popular") -> Posts:
+def get_posts(client, limit: int = 20, tab: str = "popular", cursor: int = 1 ) -> Posts:
     allowed_tabs = {"popular", "newest", "oldest"}
 
     if tab not in allowed_tabs:
@@ -13,7 +13,7 @@ def get_posts(client, limit: int = 20, tab: str = "popular") -> Posts:
             f"Allowed values: {', '.join(allowed_tabs)}"
         )
     
-    query = build_query({"limit": limit, "tab": tab})
+    query = build_query({"limit": limit, "tab": tab, "cursor": cursor})
     response = client.get(f"/api/posts?{query}")
     response.raise_for_status()
     return Posts.model_validate(response.json())
@@ -122,8 +122,12 @@ def repost_post(client, post_id: str, content: str | None = None) -> bool:
     return truthy_response_status(response.status_code)
 
 
-def get_user_posts(client, username: str, limit: int = 20, sort: str = "new") -> Posts:
-    query = build_query({"limit": limit, "sort": sort})
+def get_user_posts(client, username: str, limit: int = 20, sort: str = "new", cursor: str | None = None) -> Posts:
+    if cursor:
+        query = build_query({"limit": limit, "sort": sort, "cursor": cursor})
+    else:
+        query = build_query({"limit": limit, "sort": sort})
+    
     response = client.get(f"/api/posts/user/{username}?{query}")
     response.raise_for_status()
     return Posts.model_validate(response.json())

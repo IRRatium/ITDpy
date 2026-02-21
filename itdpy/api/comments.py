@@ -56,7 +56,7 @@ def unlike_comment(client, comment_id: str) -> bool:
     return truthy_response_status(response.status_code)
 
 
-def get_comments(client, post_id: str, limit: int = 20, sort: str = "popular") -> Comments:
+def get_comments(client, post_id: str, limit: int = 20, sort: str = "popular", cursor: str | None = None ) -> Comments:
     allowed_sorts = {"popular", "newest", "oldest"}
 
     if sort not in allowed_sorts:
@@ -64,8 +64,11 @@ def get_comments(client, post_id: str, limit: int = 20, sort: str = "popular") -
             f"Invalid sort value '{sort}'. "
             f"Allowed values: {', '.join(allowed_sorts)}"
         )
-    
-    query = build_query({"limit": limit, "sort": sort})
+    if cursor:
+        query = build_query({"limit": limit, "sort": sort, "cursor": cursor})
+    else:
+        query = build_query({"limit": limit, "sort": sort})
+        
     response = client.get(f"/api/posts/{post_id}/comments?{query}")
     response.raise_for_status()
     return Comments.model_validate(response.json())

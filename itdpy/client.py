@@ -230,8 +230,8 @@ class ITDClient:
     def mark_all_notification_read(self, notification_ids):
         return mark_notification_read(self, notification_ids)
     
-    def get_posts(self, limit: int = 20, tab: str = "popular") -> Posts:
-        return get_posts(self, limit, tab)
+    def get_posts(self, limit: int = 20, tab: str = "popular", cursor: int = 1 ) -> Posts:
+        return get_posts(self, limit, tab, cursor)
     
     def get_post(self, post_id: str) -> Post:
         return get_post(self, post_id)
@@ -261,8 +261,8 @@ class ITDClient:
     def repost_post(self, post_id: str, content: str | None = None) -> bool:
         return repost_post(self, post_id, content)
     
-    def get_user_posts(self, username: str, limit: int = 20, sort: str = "new") -> Posts:
-        return get_user_posts(self, username, limit, sort)
+    def get_user_posts(self, username: str, limit: int = 20, sort: str = "new",  cursor: str | None = None) -> Posts:
+        return get_user_posts(self, username, limit, sort, cursor)
     
     def update_profile(
     self,
