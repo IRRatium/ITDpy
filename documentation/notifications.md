@@ -11,7 +11,7 @@
 ----------
 
 ## Получить список уведомлений
-```json
+```python
 client.get_notifications(offset=0, limit=20) 
 ```
 ### Параметры:
@@ -23,7 +23,7 @@ client.get_notifications(offset=0, limit=20)
 Возвращает модель `Notifications` [Подробнее](models/notifications) 
 
 ## Отметить уведомление как прочитанное
-```json
+```python
 client.mark_notification_read(notification_id)
 ```
 

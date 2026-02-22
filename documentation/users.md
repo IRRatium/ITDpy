@@ -107,7 +107,7 @@ for  user  in  followers.users:
 ----------
 
 ## Получить подписки 
-```
+```python
 client.get_following("gam5510", page=1, limit=30)
 ```
 ### Параметры:

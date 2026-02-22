@@ -25,15 +25,15 @@ client.get_posts(limit=20, tab="popular")
 Возвращает модель `Posts` [Подробнее](models/posts.md).
 
 ## Получить один пост
-
-`client.get_post(post_id)` 
-
+```python
+client.get_post(post_id) 
+```
 Возвращает модель `Post` [Подробнее](models/post.md).
 
 ## Создать пост
-
-`client.create_post(content="Привет!")` 
-
+```python
+client.create_post(content="Привет!") 
+```
 ### Параметры:
 
 -   `content` — текст поста
