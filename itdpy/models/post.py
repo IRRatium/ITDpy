@@ -51,6 +51,8 @@ class Post(ITDBaseModel):
 
     poll: Optional[Poll] = None
 
+    dominant_emoji: Optional[str] = Field(None, alias="dominantEmoji")
+
     def __repr__(self) -> str:
         return f"<Post {self.id}>"
 

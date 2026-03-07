@@ -255,9 +255,8 @@ class ITDClient:
         post_id: str,
         content: str,
         attachment_ids: list[str] | str | None = None,
-        parse_html: bool = False,
     ) -> Comment:
-        return create_comment(self, post_id, content, attachment_ids, parse_html)
+        return create_comment(self, post_id, content, attachment_ids)
 
     def reply_to_comment(
         self,
