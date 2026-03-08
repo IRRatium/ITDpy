@@ -1,5 +1,14 @@
 # ITDpy
 
+<p align="center">
+  <img src="https://i.postimg.cc/gJ9z8RDk/ITDpy-(1)-pixian-ai.png" width="700">
+</p>
+
+![PyPI version](https://img.shields.io/pypi/v/itdpy)
+![Downloads](https://static.pepy.tech/badge/itdpy)
+![Python](https://img.shields.io/pypi/pyversions/itdpy)
+![License](https://img.shields.io/github/license/Gam5510/ITDpy)
+
 Python SDK для социальной сети итд.com.
 > ⚠️ Неофициальный API-клиент.  
 >SDK предназначен для разработки клиентских приложений и тестирования API в рамках действующих правил платформы.
@@ -20,44 +29,7 @@ pip install -e .
 
 ## Документация  
 
-- [Документация](documentation/index.md)  
-- [Быстрый старт](documentation/quickstart.md)  
-- [Навигация](documentation/NAVIGATION.md)
----  
-  
-## Модули  
-  
-- [Clans](documentation/clans.md)
-- [Comments](documentation/comments.md)
-- [Discovery](documentation/discovery.md)  
-- [Formatting](documentation/formatting.md)  
-- [Notifications](documentation/notifications.md)
-- [Pins](documentation/pins.md) 
-- [Polls](documentation/polls.md)  
-- [Posts](documentation/posts.md) 
-- [Profile](documentation/profile.md) 
-- [Settings](documentation/settings.md)
-- [Upload](documentation/upload.md)
-- [Users](documentation/users.md)   
-  
-  
----  
-  
-## Модели  
-
-- [Actor](documentation/models/actor.md)
-- [Comment](documentation/models/comment.md)  
-- [Comments](documentation/models/comments.md)
-- [Discovery](documentation/models/discovery.md)
-- [Notification](documentation/models/notification.md)
-- [Notifications](documentation/models/notifications.md)
-- [Pagination](documentation/models/pagination.md)  
-- [Pins](documentation/models/pins.md) 
-- [Poll](documentation/models/poll.md)  
-- [Post](documentation/models/post.md)  
-- [Posts](documentation/models/posts.md)  
-- [Settings](documentation/models/settings.md)
-- [Users](documentation/models/users.md)  
+[![Docs](https://img.shields.io/badge/docs-online-blue)](https://gam5510.github.io/ITDpy/)
 
 
 ## Быстрый старт
