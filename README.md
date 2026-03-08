@@ -66,9 +66,9 @@ from  itdpy.client  import  ITDClient
 
 client  =  ITDClient(refresh_token="Ваш_токен")
 
-file  =  client.upload_file(client,  "matrix-rain-effect-animation-photoshop-editor.gif")
+file  =  client.upload_file("matrix-rain-effect-animation-photoshop-editor.gif")
 print(file.id)
-update  =  update_profile(client,  banner_id=file.id)
+update  =  client.update_profile(banner_id=file.id)
 print(update.banner)
 ```
 
