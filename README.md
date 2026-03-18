@@ -1,130 +1,288 @@
-# ITDpy
+# IRR-ITDpy
 
 <p align="center">
   <img src="https://i.postimg.cc/gJ9z8RDk/ITDpy-(1)-pixian-ai.png" width="700">
 </p>
 
-![PyPI version](https://img.shields.io/pypi/v/itdpy)
-![Downloads](https://static.pepy.tech/badge/itdpy)
-![License](https://img.shields.io/github/license/Gam5510/ITDpy)
+<p align="center">
+  <a href="https://pypi.org/project/irr-itdpy/"><img src="https://img.shields.io/pypi/v/irr-itdpy?color=blue&label=PyPI" alt="PyPI"></a>
+  <a href="https://pepy.tech/project/irr-itdpy"><img src="https://static.pepy.tech/badge/irr-itdpy" alt="Downloads"></a>
+  <a href="https://github.com/Gam5510/ITDpy/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Gam5510/ITDpy" alt="License"></a>
+  <img src="https://img.shields.io/badge/python-3.9+-blue" alt="Python 3.9+">
+</p>
 
-Python SDK для социальной сети итд.com.
-> ⚠️ Неофициальный API-клиент.  
->SDK предназначен для разработки клиентских приложений и тестирования API в рамках действующих правил платформы.
+<p align="center">
+  Расширенный форк <a href="https://github.com/Gam5510/ITDpy">ITDpy</a> — неофициальный Python SDK для <a href="https://итд.com">итд.com</a>
+</p>
 
-## Установка pip
+> Форк сделан [IRRatium](https://github.com/IRRatium).  
+> Неофициальный API-клиент. SDK предназначен для разработки приложений и автоматизации в рамках правил платформы.
+
+---
+
+## Отличия от оригинала
+
+| Функция | ITDpy | IRR-ITDpy |
+|---------|-------|-----------|
+| Статус онлайн (`keep_online`) | ❌ | ✅ |
+| Стена (`get_wall`, `post_to_wall`) | ❌ | ✅ |
+| Просмотры постов (`view_post`) | ❌ | ✅ |
+| Смена юзернейма (`set_username`) | ❌ | ✅ |
+| Генератор юзернеймов (`random_username`) | ❌ | ✅ |
+| Посты, комментарии, уведомления | ✅ | ✅ |
+| Пины, опросы, настройки | ✅ | ✅ |
+| Поиск, дискавери | ✅ | ✅ |
+
+---
+
+## Установка
+
 ```bash
-pip install itdpy
+pip install irr-itdpy
 ```
 
-### Через git
-
+Или через git:
 ```bash
-git clone https://github.com/Gam5510/ITDpy
-cd itdpy
-pip install -r requirements.txt
+git clone https://github.com/IRRatium/IRR-ITDpy
+cd IRR-ITDpy
 pip install -e .
 ```
 
-## Документация  
-
-[![Docs](https://img.shields.io/badge/docs-online-blue)](https://gam5510.github.io/ITDpy/)
-
+---
 
 ## Быстрый старт
 
-> Blockquote ![Получение токена](https://i.ibb.co/DH1m8GL7/Assistant.png)
-Как получить токен
-
 ```python
-from  itdpy.client  import  ITDClient
+from itdpy import ITDClient
 
-client  =  ITDClient(refresh_token="Ваш refresh token")
+client = ITDClient(refresh_token="ваш_токен")
 
-me  =  client.get_me()
-print(me.id)
+me = client.get_me()
 print(me.username)
+print(me.display_name)
+print(me.followers_count)
 ```
 
-### Скрипт на обновление имени
+<details>
+<summary>Как получить refresh_token</summary>
 
+1. Открой итд.com в браузере и войди в аккаунт
+2. Открой DevTools (F12) → Application → Cookies
+3. Найди куку `refresh_token` и скопируй значение
+
+</details>
+
+---
+
+## Возможности
+
+### Пользователи
 ```python
-from  itdpy.client  import  ITDClient
-from  datetime  import  datetime
-import  time
+me = client.get_me()
 
-client = ITDClient(refresh_token="Ваш_токен")
+user = client.get_user("gam5510")
+print(user.bio, user.followers_count, user.online)
 
-while  True:
-	client.update_profile(display_name=f"Фазлиддин |{datetime.now().strftime('%m.%d %H:%M:%S')}|")
-	time.sleep(1)
+client.follow_user("gam5510")
+client.unfollow_user("gam5510")
+
+followers = client.get_followers("gam5510", page=1, limit=30)
+following = client.get_following("gam5510")
 ```
 
-### Скрипт на обновление баннера 
+### Профиль
 ```python
-from  itdpy.client  import  ITDClient
+client.update_profile(display_name="Новое имя", bio="Описание")
 
-client  =  ITDClient(refresh_token="Ваш_токен")
+# Быстрая смена юзернейма
+client.set_username("coolname42")
 
-file  =  client.upload_file("matrix-rain-effect-animation-photoshop-editor.gif")
-print(file.id)
-update  =  client.update_profile(banner_id=file.id)
-print(update.banner)
+# Загрузить баннер
+file = client.upload_file("banner.gif")
+client.update_profile(banner_id=file.id)
 ```
 
-# Костомные запросы  
+### Посты
+```python
+posts = client.get_posts(limit=20, tab="popular")  # popular / newest / oldest
 
-## ✅ Базовый пример кастомного GET
+post = client.create_post("Привет!")
+
+# С HTML-форматированием
+post = client.create_post("<b>Жирный</b> и <i>курсив</i>", parse_html=True)
+
+# С опросом
+post = client.create_post(
+    content="Голосуем!",
+    poll={"question": "Лучший язык?", "options": ["Python", "Go", "Rust"]}
+)
+
+# С медиафайлом
+file = client.upload_file("photo.jpg")
+post = client.create_post("Фото!", attachment_ids=[file.id])
+
+client.like_post(post.id)
+client.unlike_post(post.id)
+client.repost_post(post.id, content="Мой комментарий")
+client.view_post(post.id)
+client.delete_post(post.id)
+
+posts = client.get_user_posts("gam5510")
+```
+
+### Комментарии
+```python
+comments = client.get_comments(post_id, limit=20, sort="popular")
+
+comment = client.create_comment(post_id, "Отличный пост!")
+client.reply_to_comment(comment.id, "Согласен!")
+client.like_comment(comment.id)
+client.delete_comment(comment.id)
+
+replies = client.get_replies(comment.id)
+```
+
+### Стена ✨
+```python
+wall = client.get_wall("gam5510")
+client.post_to_wall("gam5510", "Привет!")
+```
+
+### Статус онлайн ✨
+```python
+# Держать онлайн в фоне — одна строка
+client.keep_online()
+
+# С обработкой событий в реальном времени
+def on_event(event_type, data):
+    if event_type == "like":
+        print("Новый лайк!")
+    elif event_type == "comment":
+        print("Новый комментарий!")
+    elif event_type == "follow":
+        print("Новый подписчик!")
+
+client.keep_online(on_event=on_event)
+
+# Блокирующий режим
+client.keep_online(background=False)
+```
+
+### Уведомления
+```python
+notifications = client.get_notifications(limit=20)
+for n in notifications:
+    print(n.type, n.actor.username)
+
+client.mark_notification_read(notification_id)
+client.mark_all_notification_read([id1, id2])
+```
+
+### Пины
+```python
+pins = client.get_pins()
+client.set_pin(slug="kirill67_202602_infected")
+client.remove_pin()
+```
+
+### Настройки
+```python
+client.update_privacy(
+    is_private=True,
+    wall_access="followers",   # everyone / followers / mutual / nobody
+    likes_visibility="mutual",
+    show_last_seen=False,
+)
+
+client.update_notification_settings(
+    likes=True,
+    comments=True,
+    sound=False,
+)
+```
+
+### Поиск и дискавери
+```python
+results = client.search("python")
+posts = client.search_hashtags("python")
+trends = client.get_trending_hashtags(limit=10)
+suggestions = client.who_to_follow()
+```
+
+### Опросы
+```python
+post = client.get_post(post_id)
+client.vote(post.id, option_ids=post.poll.options[0].id)
+```
+
+### Утилиты ✨
+```python
+from itdpy.utils import random_username
+
+random_username()              # "wolf4821"
+random_username(word="cyber")  # "cyber391"
+random_username(digits=3)      # "fox742"
+```
+
+---
+
+## Кастомные запросы
+
 ```python
 response = client.get("/api/users/me")
-data = response.json() 
-print(data)
-```
-### Можно добавить любой эндпоинт
-----------
+data = response.json()
 
-## ✅ POST с JSON
-```python
-response = client.post( 
-		"/api/posts",
-    json={ "content": "Привет из кастомного запроса" }
-) 
-print(response.status_code) 
-print(response.json())
-```
-----------
+response = client.post("/api/posts", json={"content": "Привет!"})
 
-## ✅ PUT / PATCH
-```python
-response = client.patch( "/api/profile",
-    json={ "displayName": "Фазлиддин 😎" }
-)
-```
-----------
+client.put("/api/users/me", json={"displayName": "Новое имя"})
+client.delete("/api/posts/POST_ID")
 
-## ✅ DELETE
-```python
-client.delete("/api/posts/POST_ID") 
+response = client.get("/api/posts", params={"limit": 50, "sort": "popular"})
 ```
-----------
 
-## ✅ Передача query-параметров
-```python
-response = client.get( "/api/posts",
-    params={ "limit": 50, "sort": "popular" }
-)
-```
+---
+
+## Модели
+
+| Модель | Описание |
+|--------|----------|
+| `Me` | Текущий пользователь |
+| `User` | Профиль пользователя |
+| `UserLite` | Краткий профиль (в постах, комментариях) |
+| `Post` | Пост |
+| `Posts` | Список постов с пагинацией |
+| `Comment` | Комментарий |
+| `Notification` | Уведомление |
+| `Poll` / `PollOption` | Опрос |
+| `Pin` / `Pins` | Пины профиля |
+| `Attachment` | Медиафайл |
+| `PrivacySettings` | Настройки приватности |
+| `NotificationSettings` | Настройки уведомлений |
+
+Все модели на **Pydantic v2**, автоматический маппинг `camelCase → snake_case`.
+
+---
+
+## Документация оригинала
+
+[![Docs](https://img.shields.io/badge/docs-ITDpy-blue)](https://gam5510.github.io/ITDpy/)
+
+---
 
 ## Планы
 
-- Улучшенная обработка и форматирование ошибок
-- Логирование (через `logging`)
-- Расширение объектной модели (Post, Comment, User и др.)
-- Дополнительные API-эндпоинты по мере появления
-- Улучшение документации и примеров
+- [ ] Async-клиент (`asyncio`)
+- [ ] Логирование через `logging`
+- [ ] Новые эндпоинты по мере появления
 
+---
 
-## Прочее
+## Благодарности
 
-Проект активно развивается.
-Если у вас есть идеи или предложения — создавайте issue или pull request.
+Оригинальная библиотека — [ITDpy](https://github.com/Gam5510/ITDpy) by [Gam5510](https://github.com/Gam5510)
+
+---
+
+## Лицензия
+
+MIT © [IRRatium](https://github.com/IRRatium)
