@@ -1,4 +1,4 @@
-﻿from .actor import Actor
+from .actor import Actor
 from .attachment import Attachment
 from .comment import Comment
 from .comments import Comments
@@ -20,6 +20,8 @@ from .who_to_follow import WhoToFollow
 from .hashtags import HashtagPosts, TrendingHashtagsResponse, Hashtag
 from .search import Search
 from .settings_models import PrivacySettings, NotificationSettings
+from .portal import Portal
+
 __all__ = [
     "Actor",
     "Attachment",
@@ -46,5 +48,6 @@ __all__ = [
     "PrivacySettings",
     "NotificationSettings",
     "TrendingHashtagsResponse",
-    "Hashtag"
+    "Hashtag",
+    "Portal",
 ]
