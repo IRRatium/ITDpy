@@ -9,6 +9,7 @@
   <a href="https://pepy.tech/project/itdirr"><img src="https://static.pepy.tech/badge/itdirr" alt="Downloads"></a>
   <a href="https://github.com/Gam5510/ITDpy/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Gam5510/ITDpy" alt="License"></a>
   <img src="https://img.shields.io/badge/python-3.9+-blue" alt="Python 3.9+">
+  <a href="https://docs.itd.irring.ru"><img src="https://img.shields.io/badge/docs-docs.itd.irring.ru-blue" alt="Docs"></a>
 </p>
 
 <p align="center">
@@ -17,6 +18,8 @@
 
 > Форк сделан [IRRatium](https://github.com/IRRatium).  
 > Неофициальный API-клиент. SDK предназначен для разработки приложений и автоматизации в рамках правил платформы.
+
+📚 **[Документация](https://docs.itd.irring.ru)** | 🐍 **[PyPI](https://pypi.org/project/itdirr/)** | 💻 **[GitHub](https://github.com/IRRatium/itdirr)**
 
 ---
 
@@ -253,9 +256,11 @@ response = client.get("/api/posts", params={"limit": 50, "sort": "popular"})
 
 ---
 
-## Документация оригинала
+## Документация
 
-[![Docs](https://img.shields.io/badge/docs-ITDpy-blue)](https://gam5510.github.io/ITDpy/)
+[![Docs](https://img.shields.io/badge/docs-docs.itd.irring.ru-blue)](https://docs.itd.irring.ru)
+
+Документация оригинала: [![Docs](https://img.shields.io/badge/docs-ITDpy-blue)](https://gam5510.github.io/ITDpy/)
 
 ---
 
