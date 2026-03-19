@@ -89,4 +89,5 @@ __all__ = [
     "view_post",
     "view_posts",
     "get_portal",
+    "download_banner",
 ]
