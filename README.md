@@ -125,7 +125,7 @@ post = client.create_post("Фото!", attachment_ids=[file.id])
 
 client.like_post(post.id)
 client.unlike_post(post.id)
-client.repost_post(post.id, content="Мой комментарий")
+client.repost_post(post.id, content="Мой комментарий")  # content обязателен
 client.view_post(post.id)
 client.delete_post(post.id)
 
@@ -177,7 +177,7 @@ for n in notifications:
     print(n.type, n.actor.username)
 
 client.mark_notification_read(notification_id)
-client.mark_all_notification_read([id1, id2])
+client.mark_all_notification_read()  # отмечает все сразу
 ```
 
 ### Пины
