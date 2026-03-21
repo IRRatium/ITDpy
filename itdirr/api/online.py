@@ -32,8 +32,13 @@ def keep_online(
 
         # Уникальный device_id на всё время жизни соединения
         device_id = str(uuid.uuid4())
-        client.session.headers.setdefault("x-device-id", device_id)
-        client.session.headers.setdefault("x-requested-with", "XMLHttpRequest")
+client.session.headers.update({
+    "User-Agent":        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                         "AppleWebKit/537.36 (KHTML, like Gecko) "
+                         "Chrome/145.0.0.0 Safari/537.36",
+    "x-device-id":       device_id,
+    "x-requested-with":  "XMLHttpRequest",
+})
 
         while True:
             try:
